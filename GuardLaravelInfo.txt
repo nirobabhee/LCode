@@ -1,0 +1,12 @@
+
++++++++++++++++++++++++ Guard Create of Laravel +++++++++++++++++++++
+#####################################################################
+
+1) Route File e route gulo thik kora . (Ex. web, admin, assistant,)
+2) RouteServiceProvider.php   e config group kora.
+3) Middleware folder e kaj kora lagbe .(Ex: RedirectIfStaff.php,RedirectIfNotStaff.php,)
+4) kernel.php   file e kaj kora.
+5) auth.php  file -  config/folder er vitore. 
+6) Controller... make krte hobe !
+7) Model authenticable kora lagbe.. (EX: admin.php , user.php Model ke follow)
+8) view  - blade make!

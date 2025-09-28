@@ -1,0 +1,7 @@
+<th>Serial</th>
+ ...
+ @foreach ($products as $product)
+ <tr>
+     <td>{{ $loop->index + $product->firstItem() }}</td>
+     ...
+ @endforeach

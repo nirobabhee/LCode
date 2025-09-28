@@ -1,0 +1,90 @@
+
+
+
+
+ <div class="google-map" id="map"></div>
+@push('style')
+    <style>
+        .google-map {
+            height: 600px !important;
+            border-radius: 10px
+        }
+    </style>
+@endpush
+@push('script')
+    <script src="https://maps.googleapis.com/maps/api/js?key={{ gs('google_map_api_key') }}&libraries=places,geometry&v=3.45.8"></script>
+
+    <script>
+        "use strict";
+
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {});
+            var coordinates = [{
+                    lat: `{{ @$lottery->longitude }}`,
+                    lng: `{{ @$lottery->latitude }}`
+                },
+                {
+                    lat: `{{ @$contest->longitude }}`,
+                    lng: `{{ @$contest->latitude }}`
+                },
+            ];
+
+            var startLatLng = new google.maps.LatLng(coordinates[0].lat, coordinates[0].lng);
+            var endLatLng = new google.maps.LatLng(coordinates[1].lat, coordinates[1].lng);
+
+            var bounds = new google.maps.LatLngBounds();
+            bounds.extend(startLatLng);
+            bounds.extend(endLatLng);
+            map.fitBounds(bounds);
+
+            var line = new google.maps.Polyline({
+                path: [startLatLng, endLatLng],
+                strokeColor: "#FF0000",
+                strokeOpacity: 1.0,
+                strokeWeight: 2,
+                map: map,
+            });
+
+            var distance = google.maps.geometry.spherical.computeDistanceBetween(startLatLng, endLatLng);
+            var distanceInKm = (distance / 1000).toFixed(2);
+            var distanceInMiles = (distance * 0.000621371).toFixed(2);
+
+            console.log("Distance in kilometers: " + distanceInKm + " km");
+            console.log("Distance in miles: " + distanceInMiles + " miles");
+
+            var distanceText = `Distance: ${distanceInKm} km (${distanceInMiles} miles)`;
+
+            // Calculate midpoint for the InfoWindow
+            var midpoint = new google.maps.LatLng(
+                (coordinates[0].lat + coordinates[1].lat) / 2,
+                (coordinates[0].lng + coordinates[1].lng) / 2
+            );
+
+            // Display the distance on the map at the midpoint
+            var infoWindow = new google.maps.InfoWindow({
+                content: distanceText,
+                position: midpoint,
+            });
+            infoWindow.open(map);
+
+            // Define your custom icon
+            var icon = `{{ asset($activeTemplateTrue . '/images/icon/pin.png') }}`;
+
+            // Loop through coordinates and add a marker for each location
+            coordinates.forEach(function(location, index) {
+                var marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(location.lat, location.lng),
+                    map: map,
+                    title: 'Location ' + (index + 1),
+                    animation: google.maps.Animation.DROP,
+                    icon: {
+                        url: icon,
+                        scaledSize: new google.maps.Size(40, 40),
+                    },
+                });
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', initMap);
+    </script>
+@endpush

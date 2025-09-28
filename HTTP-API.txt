@@ -1,0 +1,3 @@
+ $category = $response = Http::withHeaders([
+            'X-Eflow-API-Key'=>'UQHJbGQ7WnGlO1fYAydw'
+        ])->get('https://api.eflow.team/v1/affiliates/categories');

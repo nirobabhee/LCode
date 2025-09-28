@@ -1,0 +1,59 @@
+
+@php
+$scope =
+    $job->project_scope == Status::SCOPE_LARGE
+        ? __('Large Project')
+        : ($job->project_scope == Status::SCOPE_MEDIUM
+            ? __('Medium Project')
+            : __('Small Project'));
+@endphp
+<button class="action-dropdown__link details-btn"
+data-job_title="{{ $job->title }}" data-scope="{{ $scope }}"
+data-deadline="{{ showDateTime($job->deadline, 'd M, Y') }}">
+<span class="text"><i class="las la-desktop"></i> @lang('Details')</span>
+</button>
+
+
+
+
+<div class="offcanvas offcanvas-end" tabindex="-1" id="detailsCanvas">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">@lang('Details')</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        <ul id="jobDetailsContent" class="list-group">
+            <li class="list-group-item">@lang('Loading...')</li>
+        </ul>
+    </div>
+</div>
+
+
+
+@push('script')
+    <script>
+        (function($) {
+            "use strict";
+
+            $(".details-btn").on("click", function() {
+                let detailsCanvas = new bootstrap.Offcanvas($("#detailsCanvas")[0]);
+                detailsCanvas.show();
+
+                let detailsList = $("#jobDetailsContent");
+                detailsList.html(''); 
+
+                $.each(this.dataset, function(key, value) {
+                    let formattedKey = key.replace(/_/g, ' ').replace(/\b\w/g, char => char
+                    .toUpperCase());
+                    detailsList.append(
+                         `<li class="list-group-item d-flex justify-content-between align-items-center">
+                <span>${formattedKey}</span>
+                <span>${value}</span>
+            </li>`
+                        );
+                });
+            });
+
+        })(jQuery);
+    </script>
+@endpush

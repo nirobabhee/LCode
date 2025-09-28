@@ -1,0 +1,6 @@
+<select name="wallet" class="form-select">
+     <option value="">@lang('All')</option>
+      <option value="0" @selected(request()->wallet != null && request()->wallet == 0)>@lang('Deposit')</option>
+      <option value="1" @selected(request()->wallet == 1)>@lang('Earning')</option>
+      <option value="3" @selected(request()->wallet == 2)>@lang('Referral')</option>
+                        </select>

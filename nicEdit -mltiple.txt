@@ -1,0 +1,51 @@
+ @push('script')
+    <script>
+        (function($) {
+            "use strict";
+
+            var fileAdded = 0;
+            $('.moreInformation').on('click', function() {
+
+                $("#fileUploadsContainer").append(`
+                    <div class="row">
+                        <div class="col-10 mb-2">
+                            <div class="nicEditor-wrapper">
+                                <textarea class="form-control border-radius-5 nicEdit" name="details[]"></textarea>
+                             </div>
+                        </div>
+                        <div class="col-1">
+                            <button type="button" class="btn btn--danger informationItemDelete"><i class="la la-times ms-0"></i></button>
+                        </div>
+                    </div>
+                `)
+
+                $(".nicEdit").each(function(index, editor) {
+                    $(this).attr("id", "nicEditor" + index);
+                    new nicEditor({
+                        fullPanel: true
+                    }).panelInstance('nicEditor' + index, {
+                        hasPanel: true
+                    });
+                    let firstDiv = $(editor).closest('.nicEditor-wrapper').find('div')[0];
+                    let nicEditorMain = $(editor).closest('.nicEditor-wrapper').find('.nicEdit-main')[
+                        0];
+                    $(firstDiv).css({
+                        width: "100%"
+                    });
+                    $(nicEditorMain).css({
+                        width: "100%"
+                    });
+                    $(firstDiv).next().css({
+                        width: "100%"
+                    });
+                });
+
+            });
+
+            $(document).on('click', '.informationItemDelete', function() {
+                fileAdded--;
+                $(this).closest('.row').remove();
+            });
+        })(jQuery);
+    </script>
+@endpush 

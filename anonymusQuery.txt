@@ -1,0 +1,10 @@
+$title = 'heirlom of marineford';
+$users = User::with(array('posts' => function($query) use($title)
+{
+    $query->where('title', 'like', $title);
+}))->get();
+///----------------------------------------------------------------------------------------------
+$users = User::with(array('posts' => function($query)
+{
+    $query->where('title', 'like', '%first%');
+}))->get();

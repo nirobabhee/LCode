@@ -1,0 +1,73 @@
+<?php
+
+namespace App\Lib;
+
+class PriceProvider
+{
+    public static function getPriceData($api)
+    {
+        $symbol       = 'PAXG';
+        $siteCurrency = gs('cur_text');
+        if ($api->id == 1) {
+            $url = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest';
+
+            $parameters = [
+                'symbol'  => $symbol,
+                'convert' => $siteCurrency,
+            ];
+
+            $apiKey = @$api->configuration->api_key->value;
+
+            $headers = [
+                'Accepts: application/json',
+                "X-CMC_PRO_API_KEY: $apiKey",
+            ];
+
+            $qs      = http_build_query($parameters);
+            $request = "{$url}?{$qs}";
+
+            $response = CurlRequest::curlContent($request, $headers);
+            $response = json_decode($response);
+
+            if ($response->status->error_code != 0) {
+                return responseError('something_wrong', $response->status->error_message);
+            }
+
+            $responseData = $response->data->$symbol->quote->$siteCurrency;
+
+            $data = [
+                'price'      => $responseData->price,
+                'change_1h'  => $responseData->percent_change_1h,
+                'change_24h' => $responseData->percent_change_24h,
+                'change_7d'  => $responseData->percent_change_7d,
+                'change_30d' => $responseData->percent_change_30d,
+                'change_90d' => $responseData->percent_change_90d,
+            ];
+
+            return responseSuccess('data_fetched', 'Data fetched successfully', $data);
+        } else {
+            $apiKey = @$api->configuration->api_key->value;
+
+            $url = "https://min-api.cryptocompare.com/data/pricemultifull?fsyms=$symbol&tsyms=$siteCurrency&api_key=$apiKey";
+
+            $response = CurlRequest::curlContent($url);
+            $response = json_decode($response);
+
+            if (!isset($response->RAW)) {
+                return responseError('something_wrong', 'Something went wrong');
+            }
+
+            $responseData = $response->RAW->$symbol->$siteCurrency;
+
+            $data = [
+                'price'      => $responseData->PRICE,
+                'change_1h'  => $responseData->CHANGEPCTHOUR,
+                'change_24h' => $responseData->CHANGEPCT24HOUR,
+                'change_7d'  => 0,
+                'change_30d' => 0,
+                'change_90d' => 0,
+            ];
+            return responseSuccess('data_fetched', 'Data fetched successfully', $data);
+        }
+    }
+}

@@ -1,0 +1,21 @@
+01.	Composer Update and make sure no warning or error there.
+02.	Keep libraries up-to-date and don't ship multiple versions of CSS and JS (mainly jQuery version).
+03.	Remove ALL unused/commented code
+04.	PROPER EVENT BINDING: Use .on() rather than .click(), .bind(), .hover(), .submit() etc...
+05.	No image that may subjected to copyright or trademark.
+06.	Bland type and poor readability (mainly on policy and blog details page)
+07.	404 doesn't really match the rest of the design (check 404/419 and 500).
+09.	Provide demo credentials for all guard.
+10.	Check spelling (mainly menu names of admin and user)
+11.	Check login and registration page (Cluttered)
+12.	Policy pages shouldn't open in new tab.
+13.	Vendor packages should be up-to-date
+14.	All theme text strings are to be translatable and properly escaped.
+15.	No inline scripts or styles unless dynamic.
+16.	All data should be sanitized on input and escaped on output
+17.	No stretched images and no poor typography.
+18.	Ensure the demo looks fully finished, and premium.
+19.	"use strict";
+20.	Please check/test your pages carefully across mobile devices and resolve any responsive issues.
+21.	Please make sure that all files are validated on http://validator.w3.org (mainly non-auth pages)
+22.	Make sure about consistent branding

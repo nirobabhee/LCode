@@ -1,0 +1,83 @@
+??Blade-HTML??
+<div class="form-check form-switch">
+                            <input class="form-check-input auto-renew-toggle" type="checkbox" role="switch"
+                                id="autoRenewSwitch" data-id="{{ $userPlan->id }}"
+                                {{ $userPlan->is_auto_renew == Status::YES ? 'checked' : '' }}>
+                            <label class="form-check-label" for="autoRenewSwitch">@lang('Auto Renew')</label>
+                        </div>
+
+
+??Ajax handle ???
+
+@push('script')
+    <script>
+        'use strict';
+        (function() {
+           
+
+            let pendingSwitch = null;
+            let originalChecked = false;
+
+
+            $(document).on('change', '.auto-renew-toggle', function() {
+                pendingSwitch = $(this);
+                originalChecked = pendingSwitch.prop('checked');
+                $('#confirmAutoRenewModal').modal('show');
+            });
+
+            $('#confirmAutoRenewBtn').on('click', function() {
+                if (!pendingSwitch) return;
+                const subscriptionId = pendingSwitch.data('id');
+                $.ajax({
+                    url: "{{ route('doctor.plan.auto-renew', '') }}/" + subscriptionId,
+                    type: 'POST',
+                    data: {
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        if (response.success) {
+                            notify('success', originalChecked ? 'Auto renew enabled' :
+                                'Auto renew disabled');
+                        } else {
+                            notify('error', 'Something went wrong.');
+                            pendingSwitch.prop('checked', !originalChecked);
+                        }
+                    },
+                    error: function(xhr) {
+                        notify('error', 'Something went wrong.');
+                        pendingSwitch.prop('checked', !originalChecked);
+                    },
+                    complete: function() {
+                        $('#confirmAutoRenewModal').modal('hide');
+                        pendingSwitch = null;
+                    }
+                });
+            });
+
+            $('#confirmAutoRenewModal').on('hidden.bs.modal', function() {
+                if (pendingSwitch) {
+                    pendingSwitch.prop('checked', !originalChecked);
+                    pendingSwitch = null;
+                }
+            });
+
+        })();
+    </script>
+@endpush
+
+
+
+??Controller-method??
+
+public function SwitchAutoRenew($id)
+    {
+
+        $userPlan = DoctorSubscription::where('doctor_id', auth('doctor')->id())->where('status', Status::PLAN_ACTIVE)->find($id);
+        if (!$userPlan) {
+            return response()->json(['success' => false]);
+        }
+        $userPlan->is_auto_renew = $userPlan->is_auto_renew == Status::NO ? Status::YES : Status::NO;
+        $userPlan->save();
+
+        return response()->json(['success' => true]);
+    }

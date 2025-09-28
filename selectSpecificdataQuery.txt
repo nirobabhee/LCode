@@ -1,0 +1,18 @@
+ public function productSearch(Request $request)
+    {
+        $search = $request->name_sku;
+        $products = PurchasesDetails::where('supplier_id', $request->supplier)->where('warehouse_id', $request->warehouse)->groupBy('product_id')->wherehas('product', function($q) use ($search){
+            $q->where('name', 'like', "$search%")->orWhere('sku', 'like', "$search%");
+        })->with(['product:id,name,stock,unit_id','product.unit:id,name'])->get();
+        if (!$products) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No data found'
+            ]);
+        } else {
+            return response()->json([
+                'success'    => true,
+                'data'       => $products,
+            ]);
+        }
+    }

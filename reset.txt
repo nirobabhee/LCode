@@ -1,0 +1,21 @@
+@push('breadcrumb-plugins')
+    <div class="d-flex flex-wrap justify-content-end gap-2">
+
+         <!-- Modal Trigger Button -->
+         <button type="button" class="btn btn-sm btn-outline--primary me-2 h-45 cuModalBtn" data-modal_title="@lang('Add New Plan')">
+            <i class="las la-plus"></i>@lang('Add New')
+        </button>
+
+        <div class="d-inline">
+            <form action="" method="GET" class="form-inline">
+                <div class="input-group justify-content-end">
+                    @if (request()->search)
+                        <a class="btn btn--primary input-group-text" href="{{ route('admin.plan.index') }}" title="Reset"> <i class="fas fa-redo-alt pt-2"></i></a>
+                    @endif
+                    <input type="text" name="search" class="form-control bg--white" placeholder="@lang('Search title')"  value="{{ request()->search }}">
+                    <button class="btn btn--primary input-group-text" type="submit"><i class="fa fa-search"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endpush

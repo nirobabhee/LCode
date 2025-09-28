@@ -1,0 +1,9 @@
+$('.nextBtn').on('click', function(e){
+                    e.preventDefault();
+                    var ticketCount = $('.total_lottery').val();
+                    if(!ticketCount){
+                        return false;
+                    }
+                    var nextPage = "{{ route('user.pick.ticket.number', $phase->id) }}"+"?count="+ticketCount;
+                    window.location.href = nextPage;
+                });

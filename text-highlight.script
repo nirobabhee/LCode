@@ -1,0 +1,42 @@
+		<h2 class="sHighlight" s-break="-1"> {{ $aboutContent->data_values->heading }}</h2>
+        <h2 class="sHighlight" s-break="2" s-length=1">Hello 564545 55555 77777 shahadat</h2>
+        <h2 class="sHighlight" s-break="-5"> {{ $aboutContent->data_values->subheading }}</h2>
+        <h2 class="sHighlight" s-break="-10" s-length=5"> {{ $aboutContent->data_values->subheading }}</h2>
+
+
+
+
+@push('script')
+    <script>
+        // Note:: Tag must be decleared h2, or h1, which is decleared it.
+        // <h2 s-break="-3" s-length=2"> Hello world Guys How are you</h2> s-break is always minus value given! and s-length is always posotive value given
+        //Note:: Color must be set..like text--base, or your own ! replace by 'red'
+
+        $(document).ready(function() {
+            $('.sHighlight').each(function() {
+                var $heading = $(this);
+                var text = $heading.text();
+                var words = text.split(' ');
+                var sBreakValue = parseInt($heading.attr('s-break'));
+                var sLengthValue = parseInt($heading.attr('s-length'));
+
+                var breakIndex = sBreakValue < 0 ? words.length + sBreakValue : sBreakValue;
+
+                // Determine the end index based on s-length or the length of the words array
+                var endIndex = sLengthValue ? breakIndex + sLengthValue : words.length;
+
+                // Create a new HTML structure with span elements for coloring
+                var coloredText = words.map(function(word, index) {
+                    var color = '';
+                    if (index >= breakIndex && index < endIndex) {
+                        color = 'red';
+                    }
+                    return '<span style="color:' + color + '">' + word + '</span>';
+                }).join(' ');
+
+                // Replace the original text with the colored text
+                $heading.html(coloredText);
+            });
+        });
+    </script>
+@endpush

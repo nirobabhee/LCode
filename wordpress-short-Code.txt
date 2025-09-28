@@ -1,0 +1,20 @@
+1) Use This function Hook.php
+
+ add_shortcode('microlab_jobs', 'job_shortcode');
+
+2) Make Helper function for this action.
+
+if (!function_exists('job_shortcode')) {
+    function job_shortcode()
+    {
+        $jobs = JobPost::where('status', 1)->where('vacancy_available', '>', 0)->orderBy('id', 'desc')->paginate(microlab_paginate());
+        ob_start();
+        echo '<div class="viser-job-lists">';
+        microlab_include('user/partials/jobs', ['jobs' => $jobs]);
+        echo '</div>';
+        return ob_get_clean();
+    }
+}
+
+
+3)page/ then short code [microlab_jobs]

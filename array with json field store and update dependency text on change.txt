@@ -1,0 +1,76 @@
+@extends('admin.layouts.app')
+@section('panel')
+    <div class="row mb-none-30">
+        <div class="col-lg-12 col-md-12 mb-30">
+            <div class="card">
+                <div class="card-body">
+                    <form action="" method="POST">
+                        @csrf
+						
+                            @php
+                                $review = $general->reviews;
+                               
+                            @endphp
+								
+							
+                            <div class="form-group ">
+                                <label class="form-control-label font-weight-bold"> @lang('One Star') </label>
+                                <input class="form-control form-control-lg" type="text" name="review[1]" value="{{ @$review[1] }}">
+                            </div>
+                            <div class="form-group ">
+                                <label class="form-control-label font-weight-bold"> @lang('Two Star') </label>
+                                <input class="form-control form-control-lg" type="text" name="review[2]" value="{{ @$review[2] }}">
+                            </div>
+                            <div class="form-group ">
+                                <label class="form-control-label font-weight-bold"> @lang('Three Star') </label>
+                                <input class="form-control form-control-lg" type="text" name="review[3]" value="{{ @$review[3] }}">
+                            </div>
+                            <div class="form-group ">
+                                <label class="form-control-label font-weight-bold"> @lang('Four Star') </label>
+                                <input class="form-control form-control-lg" type="text" name="review[4]" value="{{ @$review[4] }}">
+                            </div>
+                            <div class="form-group ">
+                                <label class="form-control-label font-weight-bold"> @lang('Five Star') </label>
+                                <input class="form-control form-control-lg" type="text" name="review[5]" value="{{ @$review[5] }}">
+                            </div>
+                       
+                      
+                        <div class="form-group">
+                            <button type="submit" class="btn btn--primary btn-block btn-lg">@lang('Update')</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+
+
+
+	////////////CONTROLLER///////////////////
+
+public function reviewSetting(){
+        $pageTitle = 'Review Setting';
+        return view('admin.setting.review', compact('pageTitle'));
+    }
+    
+    public function reviewSettingStore(Request $request){
+        $request->validate([
+            'review' => 'required|array|size:5',
+            'review.*' => 'required|string'
+        ],[
+            'review.*.required' => 'All field is required'
+        ]); //this for custom validation msg .
+    
+        
+        $general = GeneralSetting::first();
+        
+        $general->reviews = $request->review;
+        $general->save();
+        
+        $notify[] = ['success','Updated successfully'];
+        return back()->withNotify($notify);
+        
+    }
+

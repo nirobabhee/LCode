@@ -1,0 +1,37 @@
+https://github.com/kbzaman76/laramin/compare/5fe6693b7cf7776a73ad07e99abb42e98639f8fa..354f5f71f542e1580d07be86b5b830ddd7e10317
+
+
+Note: 
+
+main url https://github.com/kbzaman76/laramin/compare/ 
+->then ->
+
+-> 1st part of double dot(..) / Before -> 5fe6693b7cf7776a73ad07e99abb42e98639f8fa..354f5f71f542e1580d07be86b5b830ddd7e10317
+
+->THEN ->
+
+last part of double dot/ After  (..) 354f5f71f542e1580d07be86b5b830ddd7e10317
+
+
+
+**Important note is: [Example :: older 3.3.3 version .. recent  4.4.4 version   ] 
+
+
+
+
+Ex: https://github.com/kbzaman76/laramin/compare/v4.4.4...v4.4.11
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+https://github.com/kbzaman76/laramin

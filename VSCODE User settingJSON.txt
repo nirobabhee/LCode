@@ -1,0 +1,25 @@
+//Code>User>settings.json
+{
+  "security.promptForLocalFileProtocolHandling": false,
+  "[css]": {
+    "editor.defaultFormatter": "apility.beautify-blade"
+  },
+
+  "[php]": {
+    "editor.formatOnSave": true,
+    "editor.defaultFormatter": "kokororin.vscode-phpfmt"
+  },
+  "phpfmt.passes": [
+    "AlignEquals",
+    "AlignDoubleArrow",
+    "AlignPHPCode",
+    "AutoSemicolon",
+    "ClassToSelf",
+    "SplitElseIf"
+  ],
+  "phpfmt.psr2": false,
+
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  }
+}

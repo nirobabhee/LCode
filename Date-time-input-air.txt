@@ -1,0 +1,28 @@
+//Controller***
+ $lottery->end_time         = Carbon::parse($request->end_time)->format('Y-m-d h:i:s');
+
+//Jquery****
+   $('.expired-date').datepicker({
+                timepicker: true,
+                changeYear: true,
+                changeMonth: true,
+                minDate: new Date(),
+            });
+
+//asset***
+@push('script-lib')
+    <script src="{{ asset('assets/admin/js/vendor/datepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/vendor/datepicker.en.js') }}"></script>
+@endpush
+
+@push('style-lib')
+    <link href="{{ asset('assets/admin/css/vendor/datepicker.min.css') }}" rel="stylesheet">rel="stylesheet">
+@endpush
+
+
+
+
+//HTML****input
+ <input class="expired-date form-control" name="end_time" data-range="false" data-language="en" data-position='bottom left' type="search" value="{{ @$competition->end_time }}" autocomplete="off">
+
+

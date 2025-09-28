@@ -1,0 +1,32 @@
+@push('script')
+    <script>
+        "use strict";
+        (function ($) {
+
+            $('.table-responsive').on('click','button[data-bs-toggle="dropdown"]',function(e){
+                $(this).next(".dropdown-menu").removeAttr('style');
+                const {top,left,width,height}=e.target.getBoundingClientRect();
+                $(this).next(".dropdown-menu").css({
+                    'top':(top+height)+"px",
+                    'left':(left-width)+"px",
+                });
+            });
+
+            $(window).on('scroll',function(e){
+                $('.table-responsive .dropdown-menu').removeClass('show');
+                $('.table-responsive button[data-bs-toggle="dropdown"]').removeClass('show');
+            });
+
+        })(jQuery);
+
+    </script>
+@endpush
+
+@push('style')
+<style>
+    .table-responsive .dropdown-menu.show {
+        position: fixed !important;
+        margin-top:10px;
+    }
+</style>
+@endpush

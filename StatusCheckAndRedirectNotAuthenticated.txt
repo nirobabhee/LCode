@@ -1,0 +1,26 @@
+///LoginController e.....
+///method....
+protected function authenticated(Request $request, $user)
+    {
+        if ($user->status == 0) {
+            $this->guard()->logout();
+            $notify[] = ['error','Your account has been deactivated.'];
+            return redirect()->route('staff.login')->withNotify($notify);
+        }
+    }
+
+
+    ///RedirectIfNotStaff...........Middleware e..
+
+    //handle edit and check status==0 
+    public function handle($request, Closure $next, $guard = 'staff')
+    {
+        if (!Auth::guard($guard)->check()) {
+            return to_route('staff.login');
+        } elseif (!auth($guard)->user()->status) {
+            auth($guard)->logout();
+            $notify[] = ['error', 'Your account has been suspended'];
+            return to_route('staff.login')->withNotify($notify);
+        }
+        return $next($request);
+    }

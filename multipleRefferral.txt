@@ -1,0 +1,38 @@
+///Multiple referrel////
+//Multiple-ref
+                $referral = $investment->user;
+                if ($referral->ref_by) { //has Referral//
+                    $level = ReferralLevel::where('type', 2)->orderBy('id', 'asc')->get(); //deposit_type
+                    for ($x = 0; $x < count($level); $x++) {
+                        if (!$referral->ref_by) {
+                            break; //not found ref//
+                        }
+                        $referralPercent    = $level[$x]->percent;
+                        $referralTaker      = User::find($referral->ref_by); //get_commission
+                        $refCommission      = $investment->interest * $referralPercent / 100;
+                        $referralTaker->interest_wallet += $refCommission;
+                        $referralTaker->save();
+                        //Referral-Transaction
+                        $transaction                = new Transaction();
+                        $transaction->user_id       = $referralTaker->id;
+                        $transaction->amount        = $refCommission;
+                        $transaction->charge        = 0;
+                        $transaction->post_balance  = $referralTaker->interest_wallet;
+                        $transaction->trx_type      = '+';
+                        $transaction->trx           = $trx;
+                        $transaction->details       = 'Reference Interest ' . $refCommission . ', By ' . $referral->username;
+                        $transaction->save();
+                        //commissionlog //
+                        $log            = new CommissionLog();
+                        $log->from_id   = $referral->id;
+                        $log->to_id     = $referralTaker->id;
+                        $log->type      = 2;
+                        $log->level     =  $level[$x]->level;
+                        $log->percent   =  $referralPercent;
+                        $log->amount    =  $refCommission;
+                        $log->trx       =  $trx;
+                        $log->save();
+                        $referral       = $referralTaker; //(referral - iterate)find next ref//
+                    }
+                }
+                //End-Multiple-ref

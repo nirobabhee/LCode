@@ -1,0 +1,5 @@
+<select onChange="window.location.href=this.value" >
+                                    <option value="{{ appendQuery('trx_type', '') }}" @selected(request()->type == '')>@lang('All Type')</option>
+                                    <option value="{{ appendQuery('trx_type', '+') }}" @selected(request()->type == '+')>@lang('Plus Transactions')</option>
+                                    <option value="{{ appendQuery('trx_type', '-') }}" @selected(request()->type == '-')>@lang('Minus Transactions')</option>
+                                </select>

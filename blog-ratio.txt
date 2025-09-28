@@ -1,0 +1,7 @@
+if blog render image size is :  970x635
+and render thumb size is: 485x300 [note: this size is must be grater than thumb actual render size ]
+
+Then ration will be ->
+970x600 = 97:60
+97x5 = 485
+60x5 = 300

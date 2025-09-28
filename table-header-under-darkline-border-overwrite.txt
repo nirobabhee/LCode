@@ -1,0 +1,8 @@
+
+***If table th under any border px existing , we should use the unset by under code!
+***********************************************************************************
+.table>:not(:first-child) {
+    border-top: unset;
+}
+
+++++++++++++++++++++++++++

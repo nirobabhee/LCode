@@ -1,0 +1,14 @@
+  if ($request->hasFile('image')) {
+            try {
+                $old = @$product->image;
+                $thumb = '255x265';
+                $product->image = fileUploader($request->image, getFilePath('product'), getFileSize('product'), $old, $thumb);
+            } catch (\Exception $exp) {
+                $notify[] = ['error', 'Couldn\'t upload product image'];
+                return back()->withNotify($notify);
+            }
+        }
+
+
+
+ <img src="{{ getImage(getFilePath('product') . '/thumb_' . $item->image, getFileSize('product')) }}" alt="product">

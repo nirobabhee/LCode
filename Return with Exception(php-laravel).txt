@@ -1,0 +1,20 @@
+use Illuminate\Validation\ValidationException;
+
+try{
+
+ }catch(\Exception $e){
+            throw ValidationException::withMessages(['error' => 'Unauthorized action']);
+   }
+
+//////////////////////////////////////////////
+
+
+ protected function checkRunningPhase()
+    {
+        $phase  = Phase::whereDate('start_date', '<=', now())->whereDate('end_date', '>=', now())->first();
+        if (!$phase || empty($phase)) {
+            throw ValidationException::withMessages(['error' => 'Sorry! There is no running 		phase']);
+        }
+
+        return  $phase;
+    }

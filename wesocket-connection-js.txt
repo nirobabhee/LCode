@@ -1,0 +1,39 @@
+function connectWebSocket() {
+    try {
+        
+        var chatRoomId = 10;
+        
+        webSocket = new WebSocket(`wss://nirob.thesoftking.com/playlab_ws`);
+        
+        webSocket.onopen = () => {
+            
+            console.log('Connected to chat room: ' + chatRoomId);
+            isWebSocketConnected = true;
+     
+    
+            webSocket.send(JSON.stringify({
+                type: 'join',
+            }));
+  
+        };
+        webSocket.onmessage = async (event) => {
+            try {
+                console.log('onmessage');
+            } catch (error) {
+                console.error('Error parsing message:', error);
+            }
+        };
+        webSocket.onclose = () => {
+            console.log('Disconnected from chat room');
+            isWebSocketConnected = false;
+        };
+        webSocket.onerror = (error) => {
+            console.error('WebSocket error:', error);
+            webSocket.close();
+        };
+    } catch (error) {
+        console.error('WebSocket connection failed:', error);
+    }
+}
+
+connectWebSocket();

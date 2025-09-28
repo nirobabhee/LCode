@@ -1,0 +1,82 @@
+<?php
+
+namespace App\Http\Controllers\Admin;
+
+use App\Http\Controllers\Controller;
+use App\Models\Category;
+use App\Models\Product;
+use Carbon\Carbon;
+use Illuminate\Http\Request;
+
+class ProductReportController extends Controller
+{
+
+    public function index(Request $request)
+    {
+        $pageTitle = 'Product Report';
+
+        $categories = Category::orderBy('name')->get(['name','id']);
+        $products   = Product::with('purchaseDetails','saleDetails','purchaseReturnDetails','saleReturnDetails','category','unit')->whereHas('purchaseDetails')->orderBy('id','desc')->get();
+
+        if ($request->warehouse) {
+            $search = request()->warehouse;
+            $products = $products->where('category_id', $search);
+        }
+
+        //date search
+        if($request->date) {
+            $date = explode('-',$request->date);
+            $request->merge([
+                'start_date'=> trim(@$date[0]),
+                'end_date'  => trim(@$date[1])
+            ]);
+            $request->validate([
+                'start_date'    => 'required|date_format:m/d/Y',
+                'end_date'      => 'nullable|date_format:m/d/Y'
+            ]);
+            if($request->end_date) {
+                $endDate = Carbon::parse($request->end_date)->addHours(23)->addMinutes(59)->addSecond(59);
+                $products   = $products->whereBetween('updated_at', [Carbon::parse($request->start_date), $endDate]);
+            }else{
+                $products   = $products->where('created_at', Carbon::parse($request->start_date));
+            }
+        }
+
+        $calculation = $products->map(function($product){
+
+            $purchaseQty = $product->purchaseDetails->sum('quantity');
+            $purchasePrice = $product->purchaseDetails->sum('total');
+
+            $saleQty = $product->saleDetails->sum('quantity');
+            $salePrice = $product->saleDetails->sum('total');
+
+            $purchaseReturnQty = $product->purchaseReturnDetails->sum('quantity');
+            $purchaseReturnPrice = $product->purchaseReturnDetails->sum('total');
+
+            $saleReturnQty = $product->saleReturnDetails->sum('quantity');
+            $saleReturnPrice = $product->saleReturnDetails->sum('total');
+
+            $productsInStock = ($purchaseQty+$saleReturnQty) - ($saleQty + $purchaseReturnQty); // 267tk
+
+
+            return [
+                'purchaseQty'         => $purchaseQty,
+                'purchasePrice'       => $purchasePrice,
+
+                'saleQty'             => $saleQty,
+                'salePrice'           => $salePrice,
+
+                'purchaseReturnQty'   => $purchaseReturnQty,
+                'purchaseReturnPrice' => $purchaseReturnPrice,
+
+                'saleReturnQty'       => $saleReturnQty,
+                'saleReturnPrice'     => $saleReturnPrice,
+
+                'productsInStock'     => $productsInStock,
+            ];
+        });
+
+        // $products = $products->paginate(getPaginate());
+        return view('admin.reports.product', compact('pageTitle','categories', 'products','calculation'));
+    }
+}

@@ -1,0 +1,42 @@
+ <button type="button"
+                                                    class="btn btn-sm btn-outline--info ms-1 dropdown-toggle"
+                                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="la la-ellipsis-v"></i>@lang('More')
+                                                </button>
+
+                                                <div class="dropdown-menu">
+                                                    <li>
+                                                        <a href="" class="dropdown-item editBtn">
+                                                            <i class="la la-undo"></i> @lang('Status')
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a href="" class="dropdown-item editBtn">
+                                                            <i class="la la-undo"></i> @lang('Status')
+                                                        </a>
+                                                    </li>
+                                                </div>
+
+
+
+
+
+
+
+
+
+
+//style//
+
+@push('style')
+    <style>
+        .table-responsive {
+            min-height: 400px;
+            background: transparent
+        }
+
+        .card {
+            box-shadow: none;
+        }
+    </style>
+@endpush

@@ -1,0 +1,65 @@
+<div id=rating--here></div><script>fetch("#url").then(r => r.json()).then((r) => {
+        let v = r.rating ? r.rating : 0,
+            i = 0,
+            ic = '',
+            rH = document.getElementById("rating--here"),
+            sI = src => ic += '<img width="25px" src="' + src + '"/>';
+        while (i < 5) {
+            if (v - i >= 1) sI('{{ getImage('
+                assets / images / full - star.svg ') }}');
+            else if (v - i > 0) sI('{{ getImage('
+                assets / images / half - star.svg ') }}');
+            else sI('{{ getImage('
+                assets / images / blank - star.svg ') }}');
+            i++;
+        }
+        rH.innerHTML = '<div >' + ic + '</div> <h6>' + r.rating + r.outOf + '</h6><a href="#web" class="text--base">Powered By : SITENAME </a>';
+    }).catch(function(err) {
+        console.warn('Something went wrong.', err);
+    });</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Working--perfect code//
+
+
+
+<div class="rating--here-2" style="text-align: center; margin: 50px auto 50px;"></div>
+            <script>
+                fetch(
+                    "https://localhost/ratelab/company/rating/eyJpdiI6IitYdE93OVp2U3ZlMnljYVp0UURtdUE9PSIsInZhbHVlIjoiWURXVUI2c3Fqa214aDhaQjdsdnpLdz09IiwibWFjIjoiYTg2NjE1ZTRjNjlkOTc3N2YzZGJjNjU0MDA4Y2YyMTY3ZTk0NjU0Y2E5MzI4OTZhZDkzMTllY2VjODNmMmE2MSIsInRhZyI6IiJ9"
+                )
+                    .then((r) => r.json())
+                    .then((r) => {
+                        let v = r.rating ? r.rating : 0,
+                            i = 0,
+                            ic = "",
+                            rH = document.getElementsByClassName("rating--here-2"),
+                            sI = (src) => (ic += '<img width="25px" style="margin: 5px auto 5px;" src="' + src + '"/>');
+                        while (i < 5) {
+                            if (v - i >= 1) sI("https://localhost/ratelab/assets/images/full-star.svg");
+                            else if (v - i > 0) sI("https://localhost/ratelab/assets/images/half-star.svg");
+                            else sI("https://localhost/ratelab/assets/images/blank-star.svg");
+                            i++;
+                        }
+                        // console.log(rH[0]);
+
+                        for (let index = 0; index < rH.length; index++) {
+                            rH[index].innerHTML = "<div >" + ic + "</div> <h6>" + r.rating + r.outOf + '</h6><a href="https://localhost/ratelab/company/2/xero-sharp" style="color: #d38a04;" target="_blank" class="text--base">Powered By : RateLab </a>';                            
+                        }
+                    })
+                    .catch(function (err) {
+                        console.warn("Something went wrong in script.", err);
+                    });
+
+            </script>

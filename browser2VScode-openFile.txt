@@ -1,0 +1,6 @@
++++add after code of .env++++
+
+IGNITION_EDITOR=vscode
+DEBUGBAR_EDITOR=vscode
+DEBUGBAR_ENABLED=true
+IGNITION_THEME=dark

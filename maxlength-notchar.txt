@@ -1,0 +1,1 @@
+<input type="number" data-maxlength="10" oninput="this.value=this.value.slice(0,this.dataset.maxlength)"  name="number[]" id="verification-code" class="form-control numVal manual xyzOne" required autocomplete="off">

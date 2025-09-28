@@ -1,0 +1,16 @@
+@push('script')
+    <script>
+        @if(request()->room_type)
+            let selectedRoomType = @json(request()->room_type);
+            $(`[name=room_type] option[value="${selectedRoomType}"]`).prop('selected', true);
+        @endif
+
+
+//Selected holei on submit
+
+        $('select').on('change', function(){
+            let form = $('.filter-room');
+            form.submit();
+        });
+    </script>
+@endpush
