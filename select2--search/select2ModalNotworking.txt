@@ -1,0 +1,3 @@
+$("#keyword").select2({
+                dropdownParent: "#exampleModal"
+            });

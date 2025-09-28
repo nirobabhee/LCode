@@ -1,0 +1,6 @@
+9. Use Auth::once()
+Do you know that you c an log in with the user only for One Request? You can easily do this by utilizing the method Auth::once(). No sessions or cookies will be used, which indicates this method may be applicable when building a stateless API.
+
+if (Auth::once($credentials)) {
+    //
+}

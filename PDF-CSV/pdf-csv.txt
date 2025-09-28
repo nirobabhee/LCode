@@ -1,0 +1,68 @@
+private function getUsers($scope = null) {
+        $request      = request();
+        $pageTitle    = $this->pageTitle;
+        $emptyMessage = $this->emptyMessage;
+        $users        = User::query();
+        if ($scope) {
+            $users->$scope();
+        }
+        if ($request->type && $request->value) {
+            $column = $request->type;
+            $search = $request->value;
+            $users->where($column, 'like', "%$search%");
+        }
+        if ($request->date) {
+            $date = explode('to', $request->date);
+            $request->merge([
+                'start_date' => trim(@$date[0]),
+                'end_date'  => trim(@$date[1])
+            ]);
+            $request->validate([
+                'start_date'    => 'required|date_format:d-m-Y',
+                'end_date'      => 'nullable|date_format:d-m-Y'
+            ]);
+            if ($request->end_date) {
+                $users->whereBetween('created_at', [Carbon::parse($request->start_date), Carbon::parse($request->end_date)]);
+            } else {
+                $users->whereDate('created_at', Carbon::parse($request->start_date));
+            }
+        }
+        $users->orderBy('id', 'desc')->with('country');
+        if (request()->download == 1) {
+            // return view('pdf.users', compact('users'));
+            $pdf = $this->downloadFile($users->get());
+            $nameOfInvoice = time() . 'users.pdf';
+            return $pdf->download($nameOfInvoice);
+        }
+        if (request()->download == 2) {
+            $filename = $this->downloadCsv($users->get());
+            return response()->download(...$filename);
+        }
+        $users = $users->paginate(getPaginate());
+        return view('admin.users.list', compact('pageTitle', 'emptyMessage', 'users'));
+    }
+    private function downloadFile($users) {
+        $pdf = PDf::loadView('pdf.users', compact('users'));
+        $pdf->setOptions([
+            'enable_remote' => false,
+        ]);
+        return $pdf->setPaper('A4', 'landscape');
+    }
+    protected function downloadCsv($users) {
+        $filename = "assets/files/csv/users.csv";
+        $myFile = fopen($filename, 'w');
+        $data = "Full Name., Username, Email, Mobile, Country, Joined At\n";
+        foreach ($users as $user) {
+            $country  =  $user->country->name;
+            $joinedAt = showDateTime($user->created_at);
+            $mobile   = '+' . $user->mobile;
+            $data .= "$user->fullname, $user->username, $user->email, $mobile, $country, $joinedAt\n";
+        }
+        fwrite($myFile, $data);
+        $headers = [
+            'Content-Type' => 'application/csv',
+        ];
+        $name = 'users' . time() . '.csv';
+        $array = [$filename, $name, $headers];
+        return $array;
+    }

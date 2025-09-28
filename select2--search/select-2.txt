@@ -1,0 +1,67 @@
+
+
+////////////////////Controller-=>method//////////////
+ public function supplierSearch()
+    {
+        $suppliers = Supplier::active()->select('id', 'name', 'mobile')->where('name', 'like', "%" . request()->search . "%")->orWhere('mobile', 'like', "%" . request()->search . "%")->paginate(request()->rows ?? 5);
+
+
+        return response()->json([
+            'success' => true,
+            'suppliers' => $suppliers,
+            'more' => $suppliers->hasMorePages(),
+            ]);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//////////////////////view script/////////////
+$('#supplier').select2({
+            ajax: {
+                url: '{{ route('admin.payment.supplier.search') }}',
+                type: "get",
+                dataType: 'json',
+                delay: 1000,
+                data: function(params) {
+
+                    return {
+                        search: params.term,
+                        page: params.page, // Page number, page breaks
+                        rows: 5 // How many rows are displayed per page
+                    };
+                },
+                processResults: function(response, params) {
+                    params.page = params.page || 1;
+                    let data=response.suppliers.data;
+                    return {
+                        results: $.map(data, function (item) {
+                            return {
+                                text: item.name+' '+item.mobile,
+                                id: item.id
+                            }
+                        }),
+                        pagination: {
+                            more: response.more
+                        }
+                    };
+                },
+                cache: false
+            },
+            dropdownParent: $(".card-body"),
+
+
+
+        });

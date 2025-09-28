@@ -1,0 +1,110 @@
+
+
+**Ref:: https://cynoteck.com/blog-post/laravel-8-excel-and-csv-import-export-to-database/
+**Ref:: https://www.codecheef.org/article/laravel-9-export-import-excel-and-csv-file-example
+
+Step 1: Install Laravel Excel Package
+
+Install Laravel Excel package, which you can simply do with the below composer command:
+
+//for laravel 8 and 8 bellow//-> composer require maatwebsite/excel 
+//For laravel 9//-> composer require psr/simple-cache:^1.0 maatwebsite/excel
+
+Step 2. Register above package service in Providers and Alias for that you have to go root/config directory and open app.php file, paste the below lines into the file in provider and aliases section:
+
+'providers' => [
+       
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+        /*
+    ],
+
+    'aliases' => [      
+        
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+    ],
+
+Step 3: Install the Laravel excel package by running the artisan vendor publish command:
+
+php artisan vendor:publish –provider=”Maatwebsite\Excel\ExcelServiceProvider”.
+
+Step 4: Now you need a DB table from which you want to import or export your data, we will explain with my already existing table ‘employees’.
+
+Now will create an import and export class for the excel package. First, we will create an import class using artisan.
+
+Php artisan make: import EmployeeImport –model=Emolyee
+
+The above command will create an EmployeeImport.php file inside the app/imports/ directory which will look something like this:
+
+
+
+//controller//
+ public function import(Request $request)
+    {
+        $request->validate([
+            'file' => 'required',
+        ]);
+        if ($request->has('file')) {
+            Excel::import(new UsersImport, $request->file('file'));
+        }
+        $notify[] = ['success', 'The file has been excel/csv imported to database in laravel 9 successfully'];
+        return back()->withNotify($notify);
+    }
+
+
+
+
+///UserImport /////////////////////////////start
+<?php
+
+namespace App\Imports;
+
+use App\Models\User;
+use Maatwebsite\Excel\Concerns\ToModel;
+use Maatwebsite\Excel\Concerns\WithHeadingRow;
+
+class UsersImport implements ToModel, WithHeadingRow
+{
+    /**
+    * @param array $row
+    *
+    * @return \Illuminate\Database\Eloquent\Model|null
+    */
+    public function model(array $row)
+    {
+        // dd($row);
+
+        $user =  new User();
+            $user->firstname    = $row['firstname'];
+            $user->lastname     = $row['lastname'];
+            $user->username     = $row['username'];
+            $user->email        = $row['email'];
+            $user->country_code = $row['country_code'];
+            $user->mobile       = $row['mobile'];
+            $user->status       = $row['status'];
+            $user->save();
+
+            // dump($user);
+            // dd(200);
+
+
+
+    }
+}
+///////////////////////////////////End
+
+view//////////////
+<form action="{{ route('admin.users.import') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="input-group justify-content-end">
+                    <input type="file" name="file" class="form-control bg--white" >
+                    <button class="btn btn--primary input-group-text" type="submit"><i class="fa fa-upload"></i></button>
+                </div>
+            </form>
+
+
+ ///////////////
+
+ Route////
+  Route::post('users-import', 'import')->name('import');
+
+

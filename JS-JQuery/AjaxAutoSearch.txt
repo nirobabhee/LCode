@@ -1,0 +1,220 @@
+@extends('admin.layouts.app')
+@section('panel')
+    <div class="row mb-none-30">
+        <div class="col-lg-12 col-md-12 mb-30">
+            <form action="{{ route('admin.purchases.store') }}" method="POST" enctype="multipart/form-data">
+                @csrf
+                <div class="card">
+                    <div class="card-header">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group ">
+                                    <label>@lang('Invoice No:')</label>
+                                    <input type="text" name="name" class="form-control" placeholder="@lang('Invoice No')"
+                                        value="{{ old('name') }}" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group ">
+                                    <label class="form-label">@lang('Supplier')</label>
+                                    <select name="supplier_id" class="form-control form--control" required>
+                                        <option value="" selected disabled>@lang('Select One')</option>
+                                        @foreach ($suppliers as $supplier)
+                                            <option value="{{ $supplier->id }}">{{ __($supplier->fullname) }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group ">
+                                    <label>@lang('Purchases Date')</label>
+                                    <input name="purchases_date" type="text" data-language="en"
+                                        class="datepicker-here form-control bg--white" data-position='bottom right'
+                                        placeholder="@lang('Purchases date')" autocomplete="off"
+                                        value="{{ old('purchases_date') }}" required>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group ">
+                                    <label class="form-label">@lang('Warehouse')</label>
+                                    <select name="supplier_id" class="form-control form--control" required>
+                                        <option value="" selected disabled>@lang('Select One')</option>
+                                        @foreach ($warehouses as $warehouse)
+                                            <option value="{{ $warehouse->id }}">{{ __($warehouse->name) }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <div class="form-group ">
+                                    <label>@lang('Product')</label>
+                                    <input type="text" name="name_sku" class="form-control"
+                                        placeholder="@lang('Search by Product name & SKU ')" value="{{ old('name_sku') }}" required>
+                                </div>
+                                <div class="pl-4">
+                                    <ul class="products">
+                                        <!--Appent HTML here-->
+                                    </ul>
+                                </div>
+
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="table-responsive--sm table-responsive">
+                                <table class="table custom-data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>@lang('Product Name')</th>
+                                            <th>@lang('Quantity')</th>
+                                            <th>@lang('Rate')</th>
+                                            <th>@lang('Tax')</th>
+                                            <th>@lang('Total')</th>
+                                            <th>@lang('Action')</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                    <!--Append <tr> here-->
+                                        {{-- <tr>
+                                            <td colspan="5">@lang('No item found')</td>
+                                        </tr> --}}
+                                    </tbody>
+                                </table><!-- table end -->
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>@lang('Product Note')</label>
+                                    <textarea name="note" class="form-control" placeholder="@lang('Note')">{{ old('Note') }}</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6 col-sm-6">
+                                <div class="form-group">
+                                    <label>@lang('Product Note')</label>
+                                    <textarea name="note" class="form-control" placeholder="@lang('Note')">{{ old('Note') }}</textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="form-group">
+                        <button type="submit" class="btn btn--primary w-100 h-45">@lang('Submit')</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection
+@push('breadcrumb-plugins')
+    <a href="{{ route('admin.product.index') }}" class="btn btn-sm btn-outline--primary"><i class="la la-undo"></i>
+        @lang('Back') </a>
+@endpush
+@push('script-lib')
+    <script src="{{ asset('assets/admin/js/vendor/datepicker.min.js') }}"></script>
+    <script src="{{ asset('assets/admin/js/vendor/datepicker.en.js') }}"></script>
+@endpush
+@push('style')
+    <style>
+        .products {
+            position: absolute;
+            background-color: blue;
+            cursor: pointer
+        }
+
+    </style>
+@endpush
+
+@push('script')
+    <script>
+        "use strict";
+        $("[name=name_sku]").on('keyup', function() {
+
+            let data = {};
+            data.name_sku = $(this).val();
+            if ($(this).val().length < 1) {
+                $(".products").addClass('d-none');
+                return;
+            } else {
+                $(".products").removeClass('d-none');
+            }
+
+            $.ajax({
+                url: "{{ route('admin.purchases.product.autocomplete') }}",
+                method: 'GET',
+                data: data,
+                success: function(response) {
+                    var products = '';
+                    $(".products").html('');
+                    $.each(response.data, function(key, product)
+                    {
+                        products += `<li class="ml-5 productItem"
+                                        data-id="${product.id}"
+                                        data-name="${product.name}"
+                                        data-code="${product.code}"
+                                        data-sku="${product.sku}"
+                                        data-tax="${product.tax}"
+                                        data-tax_amount="${product.tax_amount}"
+                                        data-purchases_price="${product.purchases_price}"
+                                        >
+                                    ${product.name}</li>`;
+                    });
+
+                    $(".products").html(products);
+
+                    ///start CLICK PRODUCT
+
+                    $(".productItem").on('click', function() {
+                        $("tbody").append(` <tr>
+                                                <td data-label="@lang('Purchases Date')" class="fw-bold"> <input type="text" name="name" class="form-control" value="${$(this).data('name')}" readonly required> </td>
+                                                <td data-label="@lang('Qty')"> <input type="text" name="quantity" value="1"  class="form-control" required></td>
+                                                <td data-label="@lang('Rate')"> <input type="text" name="purchases_price" class="form-control" value="${$(this).data('purchases_price')}" required></td>
+                                                <td data-label="@lang('Tax')"> <input type="text" name="tax_amount" class="form-control" value="${$(this).data('tax_amount')}" required></td>
+                                                <td data-label="@lang('Total')"> <input type="text" name="total" class="form-control" required></td>
+                                                <td data-label="@lang('Action')">
+                                                    <div class="button--group">
+                                                            <button class="btn btn-sm btn-outline--danger ms-1 removeBtn" onclick="$(this).parent().parent().parent().remove()" >
+                                                                <i class="la la-trash"></i> @lang('Remove')
+                                                            </button>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                        `);
+                        $(".products").addClass('d-none');
+                        $('[name=name_sku]').val("");
+                    });
+                    ///End CLICK PRODUCT
+                },
+            });
+
+
+
+        }).jQuery;
+    </script>
+@endpush
+
+
+
+
+/////////////////////////////controller////////////////////////////////////
+public function productAutocomplete(Request $request)
+    {
+        $products = Product::active()
+            ->where('name', 'like', "%$request->name_sku%")
+            ->orWhere('sku', 'like', "%$request->name_sku%")
+            ->orWhere('code', 'like', "%$request->name_sku%")->get();
+        if (!$products) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No data found'
+            ]);
+        } else {
+            return response()->json([
+                'success'    => true,
+                'data'       => $products,
+            ]);
+        }
+    }

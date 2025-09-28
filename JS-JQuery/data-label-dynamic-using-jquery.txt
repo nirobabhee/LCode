@@ -1,0 +1,9 @@
+//data-label of table// responasive data-label........
+Array.from(document.querySelectorAll('table')).forEach(table => {
+  let heading = table.querySelectorAll('thead tr th');
+  Array.from(table.querySelectorAll('tbody tr')).forEach((row) => {
+      Array.from(row.querySelectorAll('td')).forEach((colum, i) => {
+          colum.setAttribute('data-label', heading[i].innerText)
+      });
+  });
+});

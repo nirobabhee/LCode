@@ -1,0 +1,14 @@
+public function($id)
+{
+$post = POST::findOrFail($id);
+view('post.edit', compact('post'))
+}
+
+Route::get('post/{id}'),[PostController::class. index]
+
+##instead of above code using ....
+public function(Post $post) ///1st one is model table name/ 2nd one is variable bcuz find!
+{ 
+view('post.edit', compact('post'))
+}
+Route::get('post/{post}'),[PostController::class. index]

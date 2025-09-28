@@ -1,0 +1,19 @@
+1) Put those package in composer.json
+ "require": {
+        "kornrunner/keccak": "^1.1",
+        "simplito/elliptic-php": "^1.0",
+    },
+** maybe required to uncomment php.ini ;extension=gmp
+2) Make this colum in user table {
+ALTER TABLE `users` ADD `wallet` VARCHAR(255) NULL DEFAULT NULL AFTER `ref_by`;
+ALTER TABLE `users` ADD `message` VARCHAR(255) NULL DEFAULT NULL AFTER `wallet`;
+}
+
+3) Add Button and Controller and route//
+Then on your chorome extension metamask
+try to login.
+
+4) user_data.blade.php te data update kre nite hobe! UserController.php er code o modify hobe!
+
+
+4) composer update

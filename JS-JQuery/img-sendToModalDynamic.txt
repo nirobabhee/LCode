@@ -1,0 +1,15 @@
+var x = '{{ asset(getFilePath('productBrand')) }}' ;
+
+
+var x = '{{ asset(getFilePath('productBrand')) }}' ;
+var y = '{{ getFileSize('productBrand') }}';
+
+var a = resource.image;
+
+
+// console.log(x+'/'+a);
+
+//  console.log(resource.image);
+                var pathToImage = x+'/'+a;
+
+                $('.ss').css('background-image', 'url('+pathToImage+')');

@@ -1,0 +1,27 @@
+//get//
+ let data = {};
+ data.category_id = $(this).data('id');
+                    [[[[var url = "{{ route('campaign.filter', '') }}/" + data.category_id;]]]]
+                            data.invoice_no = $(this).val();
+
+                            $.get("{{ route('admin.purchase.invoice.check') }}", data, function(response){
+                                console.log(response);
+                            });
+            });
+
+
+
+//post//
+  function callMiningApi() {
+                        let data = {};
+                        data._token = `{{ csrf_token() }}`;
+                        $.post("{{ route('user.mining.update') }}", data, miningApiAction);
+                    }
+
+
+
+//function miningApiAction(response) {
+                   // if (response == 'error') {
+                      //  notExpired = false;
+                   // }
+              //  }

@@ -1,0 +1,11 @@
+public function update/store/edit(Request $request)
+{
+$book= Book::where(
+[
+['id', $request->id],
+['name', $request->book_name],
+['author_id',$request->author_id]
+)->first();
+);
+view('book.edit', compact('book'))
+}

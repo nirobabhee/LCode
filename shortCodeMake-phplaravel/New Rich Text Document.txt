@@ -1,0 +1,11 @@
+$gateway = $method->method;
+            $instruction = str_replace("{{number}}", $data->accountNumber->mobile_number, $gateway->description);
+
+->>>>>>>>
+
+Instructions
+
+Please send the amount to the below number.
+
+Bkash Agent Number: {{number}}
+

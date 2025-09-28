@@ -1,0 +1,32 @@
+Step 1:/ 
+composer require laravel/socialite
+
+
+
+//-TABLE-//
+//general_setting_table.sql >> socialite_credentials >> type "text" Null coloum then >> !
+
+
+
+//socialite_creadentials->>>value is bellow 
+
+
+
+
+//GeneralSetting.php >>>Model e....
+protected $casts = ['socialite_credentials' => 'object'];
+
+
+
+//TABLE
+
+//user_table.sql >> login_by >> coloum added for logging logs.........varchar 40 Null!
+
+
+
+***AND***
+(google, and fb avatar item save korar jnno Path /Folder baniye nite hobe!)
+path like Ex: assest/image/user/profile 
+
+
+please unzip bellow file******

@@ -1,0 +1,27 @@
+@push('script')
+    <script>
+        (function($) {
+            $("select[name=campaign_id]").select2();
+
+
+            $("select[name=campaign_id]").on('change', function(){
+
+                var id   = $(this).find(':selected').val();
+                var slug = $(this).find(':selected').data('slug');
+
+                var url = "{{ route('campaign.donation.process') }}"+"/"+slug+"/"+id;
+                $('form').attr('action', `${url}`);
+            })
+
+
+        })(jQuery)
+    </script>
+@endpush
+
+
+
+
+//web-route//
+Route::controller('DonationController')->prefix('campaign/donation')->name('campaign.donation.')->group(function () {
+    Route::post('/{slug?}/{id?}', 'donation')->name('process');
+});

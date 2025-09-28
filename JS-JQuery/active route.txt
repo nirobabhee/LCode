@@ -1,0 +1,14 @@
+@push('script')
+    <script>
+        //active route
+        let link = $('.menus li a');
+        let activateRoute = '{{ url()->current() }}';
+
+        $.each(link, function(index, value) {
+            if (value.href == activateRoute) {
+                let li = value.closest('li');
+                $(li).addClass('active');
+            }
+        });
+    </script>
+@endpush
